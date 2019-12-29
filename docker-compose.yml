@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  # name of the service
+  web:
+    build:
+      # specifies where we want files for this image to be pulled from (usually the current directory)
+      context: .
+      # location of the docker file that is going to be used to construct this image
+      dockerfile: Dockerfile.dev
+
+    ports:
+      - "3000:3000"
+    volumes:
+      # this booksmarks node_modules within the docker container
+      # and prevents us from mapping to the nonexistant node_modules
+      # directory in this project.
+      - /app/node_modules
+      # creates a mapping from the root of our project directory to /app
+      # in the docker container. This will allow docker to see changes
+      # without having to rebuild new images constantly
+      - .:/app
+  # this is a second service that enables testing in watch mode
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    # this overwrites the startup command for the image
+    # when the container is started up it will run tests
+    command: ["npm", "run", "test"]
