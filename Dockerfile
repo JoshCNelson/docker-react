@@ -12,6 +12,8 @@ RUN npm run build
 # you can only have one FROM per phase
 FROM nginx
 # I want to copy over something from the specified phase (builder in this case)
+# this tells elasticbeanstalk to use 80 as the port for incoming traffic
+EXPOSE 80
 COPY --from=builder /app/build /usr/share/nginx/html
 # nginx starts up automatically, just need to have the files here
 
