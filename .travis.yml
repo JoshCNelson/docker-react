@@ -1,0 +1,13 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t jnelson62/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run jnelson62/docker-react npm run test -e CI=true -- --coverage
+
+
